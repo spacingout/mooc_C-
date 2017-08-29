@@ -1,0 +1,189 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{CJK,indentfirst}%indenfirst宏包允许设置首行缩进
+
+\begin{document}
+
+\begin{CJK*}{UTF8}{gbsn}%用宋体
+
+ 
+
+\part{启航～ }
+
+\begin{flushleft}
+1、新的数据类型：bool.\\
+2、初始化方法\\
+（1）复制初始化\\
+（2）直接初始化 int x(1024)\\
+3、随用随定义\\
+4、cout\verb|<<|oct\verb|<<|x\verb|<<|endl;可以输出八进制的数，dec，hex同理\\
+4、cout\verb|<<|boolalpha\verb|<<|y\verb|<<|endl;输出bool类型。\\
+5、命名空间   namespace\\
+    (1)using namespace A –using namespace B\\
+         分别说明命名空间，如果冲突，必须说明，否则不必说明\\
+         用的次数较少：B：：fun();（用一次写一次）\\
+         用的次数多：cout\verb|<<|A::x\verb|<<|endl;（在前面直接加namespace std）\\
+\end{flushleft}
+\part{离港篇}
+ 
+
+   
+\section{引用}
+\begin{flushleft} 
+**就是起外号~\\
+
+1、对用外号进行操作和直接对变量本身进行操作效果是一样的\\
+ (1)基本数据类型的引用：\\
+\qquad int a=3;\\
+\qquad int \&b=a   //引用必须初始化\\
+\qquad b=10\\
+\qquad cout\verb|<<|a\verb|<<|endl;  此时输出的结果将为10\\
+
+ (2)指针类型的引用：\\
+\qquad int a=10;\\
+\qquad int *q=\&a;\\
+\qquad int \verb|*&|q=p;   就是比基本数据类型多了个星号\\
+\qquad *q=20;\\
+（3）引用作函数参数:\\
+int x=10,y=30;\\
+fun(x,y)     --这里直接写主函数里使用的目标变量即可\\
+void fun(int \&a,int \&b)\\
+\{\\
+\qquad   int c=0;\\
+\qquad   c=a;\\
+\qquad   a=b;\\
+\qquad   b=c;\\
+\}\\
+其原理就是“打萝卜头=打罗小明”;\\
+\end{flushleft}
+
+\section{const}
+\begin{flushleft} 
+宏定义define出来的x不检查语法错误，而const定义的x是有类型的是要检查语法错误的，所以更推荐使用const\\
+1、const与基本数据类型\\
+\quad const int x=3； 表示此时x无法再通过赋值来改变值\\
+2、const与指针类型\\
+（1）几种写法：\\
+\quad const int *p=NULL;\\
+\quad int const *p=NULL;\\
+\quad int *const p=NULL;\\
+前两种完全等价，但和第三种不同;\\
+\quad const int *const p=NULL;\\
+\quad int const *const p=NULL;\\
+以上两种也是完全等价的写法。\\
+ (2)典型错误：\\
+①  int x=3; const int *p=\& x;\\
+ p=\& y;  \verb|---->|正确\\
+ *p=4;   \verb|---->|错误\\ 因为之前const修饰的是*p，所以p指向的值不能变，但可以指向别的\\
+②  int x=2;int *const p=\& x;p=\& y;将是错误的;\\
+因为此时const修饰的p，即不能改变指向\\
+③  const int x=3;const int *const p=\&x \\
+    p=\& y; *p=4; 都将是错误的  \\
+    因为有俩const，所以值和指向都不能变。\\
+④  const int x=3; int *y=\& x; \verb|-->|错误\\
+    不变的x权限小，变的y权限大，容易出事，所以编译器直接不给过\\
+    int x=3;  const int *y=\& x;\verb|-->|正确\\
+    变的x权限大，不变的y权限小\\
+3、const与引用\\
+int x=3; const int \& y=x;\\
+//x=10;  \verb|---->|正确;\\
+//y=20;  \verb|---->|错误：因为此时为常引用\\
+\end{flushleft}
+
+
+\section{C++函数新特性：缺省、重载、内联}
+\begin{flushleft}
+1、函数参数的默认值（缺省值)：\\
+有默认参数值的参数必须在参数表的最右端\\
+\quad void fun（int i，int j=8）:正确\\
+\quad void fun(int i,int j=5,int k);错误\\
+Tips:声明的时候把缺省值写上，用函数的时候不用写缺省值。\\
+2、函数重载（名称相同参数可辨）\\
+（1）定义：在相同作用域内，用同一函数名定义的多个函数，其中，参数个数和参数类型可以不同\\
+3、内联函数(关键字：inline)\\
+(1)定义：编译时，将函数体代码和实参代替函数调用语句\\
+(2)声明的时候加inlin，使用时和普通函数调用一样：\\
+inline int max(int a,int b,int c)\\
+(3)限制：必须逻辑简单，不能用for、while循环，递归等等复杂结构
+\end{flushleft} 
+
+\section{内存管理}
+\begin{flushleft}
+1、定义：申请/归还内存资源就是内存管理\\
+2、申请内存用new，释放内存用delete，这俩都是运算符不是函数\\
+3、方法：\\
+\quad (1)申请：\\
+\qquad int *p=new int(10);\verb|-->|单个的 \\
+\qquad int *arr=new int[10];\verb|-->|块内存\\
+\quad (2)释放：\\
+\qquad delete p \verb|-->|单个释放;\\
+\qquad delete [ ]arr; \verb|-->|块释放;\\
+4、注意事项\\
+1、判断是否分配成功：\\
+\qquad int *p=new int[1000]\\
+\qquad if (NULL==p)\\
+\qquad \{\\
+\qquad    cout\verb|<<|"error!!"\\
+\qquad \}\\
+2、delete p; or delete []p之后要加一行p=NULL;
+
+
+\part{封装篇（上）}
+\begin{flushleft}
+一、类和对象\\
+ 1、基本概念：数据成员，成员函数。\\
+ 2、访问限定符：public,protected,private.\\ 
+ 3、栗子：\\       
+\quad class TV\\
+\quad \{\\
+\quad public:\\
+\qquad char name[100];\\
+\qquad  int type;\\
+
+\qquad  void changevol();\\
+\qquad  void power();\\
+\quad private:\\
+\qquad  电阻调节\\
+\qquad  像素配色\\
+\quad \}\\
+4、成员对象的实例化\\
+（1）从栈中实例化对象,与定义结构体没差：\\
+\quad int main（void）\\
+\quad \{\\
+\qquad TV tv;\\
+\qquad TV tv[100];\\
+\qquad return 0;\\
+\quad\}\\
+(2)从堆中实例化对象：\\
+\quad int main（void）\\
+\quad \{\\
+\qquad TV *p=new TV();\\
+\qquad TV *q=new TV[100];\\
+\qquad delete p;\\
+\qquad delete [ ]q;\\
+\qquad return 0;\\
+\quad\}\\
+5 成员对象的访问\\
+（1）从栈中:\\
+\qquad tv.type=0;\\
+\qquad tv.changeVol();\\
+(2)从堆中：\\
+\qquad p\verb|->|type=4;\\
+\qquad p\verb|->|changeVol();\\
+
+
+
+
+
+\end{flushleft}
+
+
+
+
+
+\end{flushleft}
+
+
+ 
+\end{CJK*}
+\end{document}
